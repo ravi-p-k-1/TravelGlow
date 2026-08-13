@@ -5,6 +5,7 @@ import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { healthRouter } from "./routes/healthRoutes.js";
 import { tripRouter } from "./routes/tripRoutes.js";
 import { environmentRouter } from "./routes/environmentRoutes.js";
+import { skinAnalysisRouter } from "./routes/skinAnalysisRoutes.js";
 
 export const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json({ limit: "1mb" }));
 app.use("/api/health", healthRouter);
 app.use("/api/trips", tripRouter);
 app.use("/api/trips/:id/environment", environmentRouter);
+app.use("/api/trips/:id/skin-analysis", skinAnalysisRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

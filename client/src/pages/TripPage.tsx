@@ -125,7 +125,7 @@ export function TripPage() {
             <div><span>UV exposure</span><strong>{delta(environment.comparison.uvChange, "")}</strong><small>{comparisonPhrase(environment.comparison.uvChange, "uv")}</small></div>
           </div>
           <p className="snapshot-note">Conditions were captured {new Date(environment.destination.fetchedAt).toLocaleString()}. Refreshing this page uses the saved snapshot without calling the weather provider again.</p>
-          <div className="next-phase"><div><span>Next step</span><strong>Add your skin analysis</strong><p>We’ll combine these environmental differences with your current skin condition.</p></div><button className="submit-action" type="button" disabled>Continue to skin scan →</button></div>
+          <div className="next-phase"><div><span>Next step</span><strong>Add your skin analysis</strong><p>We’ll combine these environmental differences with your current skin condition.</p></div><Link className="submit-action" to={`/trips/${tripId}/skin-scan`}>Continue to skin scan →</Link></div>
         </section>
       )}
     </main>

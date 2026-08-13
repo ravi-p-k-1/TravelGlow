@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { ApiError } from "../utils/apiError.js";
+import multer from "multer";
 
 export function notFoundHandler(
   request: Request,
@@ -22,6 +23,15 @@ export function errorHandler(
     response.status(error.statusCode).json({
       error: error.message,
       ...(error.details ? { details: error.details } : {}),
+    });
+    return;
+  }
+
+  if (error instanceof multer.MulterError) {
+    response.status(400).json({
+      error: error.code === "LIMIT_FILE_SIZE"
+        ? "Selfie must be smaller than 10 MB"
+        : "The selfie upload could not be processed",
     });
     return;
   }

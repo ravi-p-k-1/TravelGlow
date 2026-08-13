@@ -25,4 +25,6 @@ export const env = {
     "postgresql://travelglow:travelglow_dev@localhost:5432/travelglow",
   weatherApiKey: process.env.WEATHER_API_KEY ?? "",
   useMockWeather: readBoolean(process.env.USE_MOCK_WEATHER, true),
+  youcamApiKey: process.env.YOUCAM_API_KEY ?? "",
+  useMockYoucam: readBoolean(process.env.USE_MOCK_YOUCAM, true),
 } as const;

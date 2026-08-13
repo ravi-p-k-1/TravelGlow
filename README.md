@@ -16,6 +16,7 @@ The initial stack includes:
 - Validated trip REST API and responsive trip-planning flow
 - Persisted home and destination environment snapshots
 - Deterministic environment comparison with mock and WeatherAPI.com adapters
+- YouCam-compatible selfie upload and persisted normalized skin analysis
 
 ## Trip API
 
@@ -39,6 +40,17 @@ Mock weather is enabled by default for a reliable demo. It produces the specific
 POST /api/trips/:id/environment  Generate once, or return the saved result
 GET  /api/trips/:id/environment  Return the saved result
 ```
+
+## YouCam skin analysis
+
+Selfies are accepted as JPEG or PNG files under 10 MB with a minimum short side of 480 pixels. Uploaded image bytes are processed in memory and are not stored by TravelGlow; only normalized analysis scores are persisted.
+
+```text
+POST /api/trips/:id/skin-analysis  Upload and analyze a new selfie
+GET  /api/trips/:id/skin-analysis  Return the saved analysis
+```
+
+Mock analysis is enabled by default. To use the documented YouCam Skin Analysis v2.1 workflow, set `USE_MOCK_YOUCAM=false` and provide `YOUCAM_API_KEY`. The backend requests a presigned upload URL, uploads the image, creates an asynchronous analysis task, polls for completion, and normalizes the returned scores.
 
 ## Run with Docker
 
