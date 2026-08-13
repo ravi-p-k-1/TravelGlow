@@ -6,6 +6,7 @@ RUN npm ci
 
 COPY tsconfig.json ./
 COPY src ./src
+COPY migrations ./migrations
 RUN npm run build
 
 FROM node:22-alpine AS production
@@ -16,6 +17,7 @@ ENV NODE_ENV=production
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/migrations ./migrations
 
 USER node
 EXPOSE 5000

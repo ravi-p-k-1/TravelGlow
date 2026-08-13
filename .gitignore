@@ -21,4 +21,4 @@ server/dist/
 # Logs and test output
 *.log
 coverage/
-
+*.tsbuildinfo

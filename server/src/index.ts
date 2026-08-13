@@ -1,10 +1,13 @@
 import { app } from "./app.js";
 import { database } from "./config/database.js";
 import { env } from "./config/env.js";
+import { runMigrations } from "./database/migrate.js";
 
-const server = app.listen(env.port, "0.0.0.0", () => {
-  console.log(`TravelGlow API listening on port ${env.port}`);
-});
+await runMigrations();
+
+const server = app.listen(env.port, "0.0.0.0", () =>
+  console.log(`TravelGlow API listening on port ${env.port}`),
+);
 
 async function shutDown(signal: string) {
   console.log(`${signal} received; shutting down`);

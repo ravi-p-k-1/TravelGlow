@@ -2,7 +2,7 @@
 
 TravelGlow is a travel-aware skincare web app that combines skin analysis with destination conditions to help travelers prepare a personalized skincare plan.
 
-## Phase 1 foundation
+## Current MVP foundation
 
 The initial stack includes:
 
@@ -12,6 +12,20 @@ The initial stack includes:
 - Multi-stage production Docker images
 - nginx static hosting and `/api` reverse proxy
 - End-to-end frontend → API → PostgreSQL health check
+- PostgreSQL-backed trip creation and retrieval
+- Validated trip REST API and responsive trip-planning flow
+
+## Trip API
+
+The Phase 2 trip endpoints are:
+
+```text
+POST  /api/trips
+GET   /api/trips/:id
+PATCH /api/trips/:id
+```
+
+Database migrations run automatically when the backend starts. Applied migration names are recorded in the `schema_migrations` table so existing schemas are not recreated.
 
 ## Run with Docker
 

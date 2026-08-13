@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { ApiError } from "../utils/apiError.js";
 
 export function notFoundHandler(
   request: Request,
@@ -17,6 +18,24 @@ export function errorHandler(
   response: Response,
   _next: NextFunction,
 ) {
+  if (error instanceof ApiError) {
+    response.status(error.statusCode).json({
+      error: error.message,
+      ...(error.details ? { details: error.details } : {}),
+    });
+    return;
+  }
+
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "type" in error &&
+    error.type === "entity.parse.failed"
+  ) {
+    response.status(400).json({ error: "Malformed JSON request" });
+    return;
+  }
+
   console.error("Unhandled request error", error);
   response.status(500).json({ error: "Internal server error" });
 }
