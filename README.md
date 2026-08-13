@@ -14,6 +14,8 @@ The initial stack includes:
 - End-to-end frontend → API → PostgreSQL health check
 - PostgreSQL-backed trip creation and retrieval
 - Validated trip REST API and responsive trip-planning flow
+- Persisted home and destination environment snapshots
+- Deterministic environment comparison with mock and WeatherAPI.com adapters
 
 ## Trip API
 
@@ -26,6 +28,17 @@ PATCH /api/trips/:id
 ```
 
 Database migrations run automatically when the backend starts. Applied migration names are recorded in the `schema_migrations` table so existing schemas are not recreated.
+
+## Weather integration
+
+TravelGlow uses a server-side WeatherAPI.com adapter for live current-condition snapshots. Set `WEATHER_API_KEY` and `USE_MOCK_WEATHER=false` in `.env` to enable it.
+
+Mock weather is enabled by default for a reliable demo. It produces the specification’s San Francisco-to-Miami comparison while preserving the locations entered on the trip. Environment results are persisted and reused on refresh.
+
+```text
+POST /api/trips/:id/environment  Generate once, or return the saved result
+GET  /api/trips/:id/environment  Return the saved result
+```
 
 ## Run with Docker
 

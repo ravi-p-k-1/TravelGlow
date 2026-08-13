@@ -5,6 +5,7 @@ import {
   updateTrip as persistTripUpdate,
 } from "../repositories/tripRepository.js";
 import { ApiError } from "../utils/apiError.js";
+import { deleteTripEnvironment } from "../repositories/environmentRepository.js";
 
 function normalizeLocation(location: string): string {
   return location.trim().replace(/\s+/g, " ");
@@ -53,5 +54,13 @@ export async function updateTrip(id: string, input: UpdateTripInput): Promise<Tr
 
   const trip = await persistTripUpdate(id, normalizedInput);
   if (!trip) throw new ApiError(404, "Trip not found");
+  if (
+    normalizedInput.currentLocation !== undefined ||
+    normalizedInput.destination !== undefined ||
+    normalizedInput.departureDate !== undefined ||
+    normalizedInput.returnDate !== undefined
+  ) {
+    await deleteTripEnvironment(id);
+  }
   return trip;
 }
