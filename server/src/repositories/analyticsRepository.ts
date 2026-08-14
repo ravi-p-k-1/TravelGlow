@@ -9,7 +9,8 @@ interface EventRow {
 }
 interface TotalsRow {
   trips: number; skin_scans: number; forecasts: number; product_impressions: number;
-  product_clicks: number; purchase_link_clicks: number; partner_impressions: number; partner_clicks: number;
+  product_clicks: number; purchase_link_clicks: number; partner_impressions: number;
+  partner_product_clicks: number; partner_purchase_link_clicks: number; partner_clicks: number;
 }
 interface TopProductRow { product_id: string; name: string; brand: string; clicks: number; }
 interface TopRetailerRow { retailer: string; clicks: number; }
@@ -79,6 +80,8 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
         COUNT(*) FILTER (WHERE event_type IN ('product_clicked','partner_product_clicked'))::int AS product_clicks,
         COUNT(*) FILTER (WHERE event_type IN ('purchase_link_clicked','partner_purchase_link_clicked'))::int AS purchase_link_clicks,
         COUNT(*) FILTER (WHERE event_type='product_recommendation_viewed' AND partner)::int AS partner_impressions,
+        COUNT(*) FILTER (WHERE event_type IN ('product_clicked','partner_product_clicked') AND partner)::int AS partner_product_clicks,
+        COUNT(*) FILTER (WHERE event_type IN ('purchase_link_clicked','partner_purchase_link_clicked') AND partner)::int AS partner_purchase_link_clicks,
         COUNT(*) FILTER (WHERE event_type IN ('product_clicked','purchase_link_clicked','partner_product_clicked','partner_purchase_link_clicked') AND partner)::int AS partner_clicks
       FROM analytics_events
     `),
@@ -103,6 +106,9 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   const productCtr = totals.product_impressions === 0
     ? 0
     : Number(((totals.product_clicks / totals.product_impressions) * 100).toFixed(1));
+  const partnerCtr = totals.partner_impressions === 0
+    ? 0
+    : Number(((totals.partner_product_clicks / totals.partner_impressions) * 100).toFixed(1));
   return {
     generatedAt: new Date().toISOString(),
     totals: {
@@ -113,7 +119,10 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
       productClicks: totals.product_clicks,
       purchaseLinkClicks: totals.purchase_link_clicks,
       partnerImpressions: totals.partner_impressions,
+      partnerProductClicks: totals.partner_product_clicks,
+      partnerPurchaseLinkClicks: totals.partner_purchase_link_clicks,
       partnerClicks: totals.partner_clicks,
+      partnerCtr,
       productCtr,
     },
     topProducts: productsResult.rows.map((row) => ({ productId: row.product_id, name: row.name, brand: row.brand, clicks: row.clicks })),

@@ -108,6 +108,12 @@ GET  /api/admin/analytics   Return aggregate demo metrics and rankings
 
 Open `/admin/analytics` to view totals for trips, scans, forecasts, impressions, clicks, CTR, partner activity, top products, top retailers, and recommended categories. The dashboard is intentionally demo-scale and does not use Firebase or another third-party analytics service.
 
+## Featured Partner demo
+
+Phase 11 enables one clearly labeled simulated placement in the catalog to demonstrate a possible commercial model. The product must qualify through the normal relevance rules before receiving a maximum three-point merchandising boost; unsuitable products remain ineligible. Partner product impressions, product clicks, retailer clicks, and CTR are reported separately on the analytics dashboard.
+
+The current Featured Partner label is a hackathon simulation only. It does not claim or imply an actual partnership between YouCam, TravelGlow, La Roche-Posay, or any retailer.
+
 ## Run with Docker
 
 Optionally copy `.env.example` to `.env` and adjust its development values. Then run:

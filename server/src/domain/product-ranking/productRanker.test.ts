@@ -44,3 +44,13 @@ test("partner boost stays smaller than a meaningful relevance match", () => {
   ];
   assert.equal(rankProducts({ ...common, products })[0]?.product.id, "strong");
 });
+
+test("partner merchandising boost is capped at three points", () => {
+  const products: Product[] = [
+    { ...baseProduct, id: "standard", name: "Standard" },
+    { ...baseProduct, id: "partner", name: "Partner", partner: true, partnerPriority: 999 },
+  ];
+  const ranked = rankProducts({ ...common, products });
+  assert.equal(ranked[0]?.product.id, "partner");
+  assert.equal((ranked[0]?.score ?? 0) - (ranked[1]?.score ?? 0), 3);
+});

@@ -30,11 +30,11 @@ function ProductCard({ recommendation, tripId }: { recommendation: ProductRecomm
   const { product } = recommendation;
   const price = formatPrice(product.priceCents);
   return (
-    <article className="product-card">
+    <article className={`product-card${product.partner ? " product-card--partner" : ""}`} id={`product-${product.id}`}>
       <div className={`product-image product-image--${product.category}`}>
         {product.imageUrl ? <img src={product.imageUrl} alt={`${product.name} product illustration`} /> : <span>{product.brand.slice(0, 1)}</span>}
         <span className="product-rank">#{recommendation.rank}</span>
-        {product.partner && <span className="partner-badge">Featured Partner</span>}
+        {product.partner && <span className="partner-badge">Featured Partner · Demo</span>}
       </div>
       <div className="product-card-body">
         <div className="product-meta"><span>{categoryLabels[product.category]}</span>{product.spf && <small>SPF {product.spf}</small>}</div>
@@ -101,13 +101,16 @@ export function ProductsPage() {
     return <main className="forecast-error state-page"><div className="error-orb" aria-hidden="true">!</div><div className="eyebrow">Products unavailable</div><h1>We couldn’t load your matches.</h1><p>{state.message}</p><div className="error-actions"><button className="primary-action" type="button" onClick={() => window.location.reload()}>Try again</button><Link className="text-action" to={`/trips/${tripId}/packing-list`}>Return to packing list</Link></div></main>;
   }
 
+  const featuredPartner = state.recommendations.find(({ product }) => product.partner);
+
   return (
     <main className="products-page">
       <div className="products-topbar"><Link className="back-link" to={`/trips/${tripId}/packing-list`}>← Back to packing list</Link><span>{state.recommendations.length} saved matches · Curated catalog</span></div>
-      <section className="products-hero"><div><div className="eyebrow">Products for your travel plan</div><h1>Consider these for {state.trip.destination}.</h1><p>Ranked by category, forecast concern, destination climate, and your skin snapshot—not by sponsorship.</p></div><aside><span>How ranking works</span><strong>Relevance first.</strong><p>A product must match something in your packing plan before it can appear here.</p></aside></section>
+      <section className="products-hero"><div><div className="eyebrow">Products for your travel plan</div><h1>Consider these for {state.trip.destination}.</h1><p>Ranked by category, forecast concern, destination climate, and your skin snapshot, with only a tightly capped demo-placement boost.</p></div><aside><span>How ranking works</span><strong>Relevance first.</strong><p>A product must match something in your packing plan before any merchandising boost can apply.</p></aside></section>
+      {featuredPartner && <section className="partner-demo-banner" aria-labelledby="partner-demo-title"><div className="partner-demo-mark" aria-hidden="true">✦</div><div><span>Featured Partner · Simulated demo</span><h2 id="partner-demo-title">A relevant placement, not a relevance shortcut.</h2><p><strong>{featuredPartner.product.name}</strong> first qualified from your packing need and forecast signals. It then received a capped +{featuredPartner.product.partnerPriority} point demo boost.</p></div><a href={`#product-${featuredPartner.product.id}`}>See the placement ↓</a></section>}
       <nav className="product-filters" aria-label="Filter product recommendations"><button className={activeCategory === "all" ? "active" : ""} type="button" onClick={() => setActiveCategory("all")}>All <span>{state.recommendations.length}</span></button>{availableCategories.map((category) => <button className={activeCategory === category ? "active" : ""} type="button" onClick={() => setActiveCategory(category)} key={category}>{categoryLabels[category]} <span>{state.recommendations.filter(({ product }) => product.category === category).length}</span></button>)}</nav>
       {visibleRecommendations.length > 0 ? <section className="product-grid">{visibleRecommendations.map((recommendation) => <ProductCard recommendation={recommendation} tripId={tripId} key={recommendation.id} />)}</section> : <section className="product-empty"><strong>No matches in this category.</strong><p>Try another filter to see your saved recommendations.</p></section>}
-      <aside className="product-disclosure"><span aria-hidden="true">i</span><p>Product information comes from TravelGlow’s manually curated demo catalog. Prices and availability can change; confirm details with the linked brand. No brand partnership is implied.</p></aside>
+      <aside className="product-disclosure"><span aria-hidden="true">i</span><p>Product information comes from TravelGlow’s manually curated demo catalog. “Featured Partner” is a simulated hackathon placement only—no YouCam, brand, or retailer partnership is claimed or implied. Prices and availability can change.</p></aside>
       <section className="next-phase product-next-step"><div><span>Demo dashboard</span><strong>Recommendation analytics</strong><p>Measure which recommendations and retailer links help travelers most.</p></div><Link className="submit-action" to="/admin/analytics">View analytics →</Link></section>
     </main>
   );

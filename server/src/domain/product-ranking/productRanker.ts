@@ -5,7 +5,7 @@ import type { PackingItem } from "../../models/packingList.js";
 import type { Product, ProductCategory } from "../../models/product.js";
 import type { SkinAnalysis } from "../../models/skinAnalysis.js";
 
-export const PRODUCT_RANKER_VERSION = "1.0.0";
+export const PRODUCT_RANKER_VERSION = "1.1.0";
 
 export interface RankedProduct {
   product: Product;

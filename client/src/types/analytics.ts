@@ -23,7 +23,10 @@ export interface AnalyticsSummary {
     productClicks: number;
     purchaseLinkClicks: number;
     partnerImpressions: number;
+    partnerProductClicks: number;
+    partnerPurchaseLinkClicks: number;
     partnerClicks: number;
+    partnerCtr: number;
     productCtr: number;
   };
   topProducts: Array<{ productId: string; name: string; brand: string; clicks: number }>;
