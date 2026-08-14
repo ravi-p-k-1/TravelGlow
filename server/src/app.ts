@@ -10,6 +10,8 @@ import { skinForecastRouter } from "./routes/skinForecastRoutes.js";
 import { packingListRouter } from "./routes/packingListRoutes.js";
 import { productRouter } from "./routes/productRoutes.js";
 import { tripProductRouter } from "./routes/tripProductRoutes.js";
+import { analyticsRouter } from "./routes/analyticsRoutes.js";
+import { adminRouter } from "./routes/adminRoutes.js";
 
 export const app = express();
 
@@ -26,6 +28,8 @@ app.use("/api/trips/:id/forecast", skinForecastRouter);
 app.use("/api/trips/:id/packing-list", packingListRouter);
 app.use("/api/trips/:id/products", tripProductRouter);
 app.use("/api/products", productRouter);
+app.use("/api/analytics", analyticsRouter);
+app.use("/api/admin", adminRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

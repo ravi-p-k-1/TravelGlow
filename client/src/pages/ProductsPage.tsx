@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { trackAnalyticsEvent } from "../api/analytics";
 import { getTripProducts } from "../api/products";
 import { getTrip } from "../api/trips";
 import type { ProductCategory, ProductRecommendation } from "../types/product";
@@ -25,7 +26,7 @@ function formatPrice(priceCents: number | undefined): string | null {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(priceCents / 100);
 }
 
-function ProductCard({ recommendation }: { recommendation: ProductRecommendation }) {
+function ProductCard({ recommendation, tripId }: { recommendation: ProductRecommendation; tripId: string }) {
   const { product } = recommendation;
   const price = formatPrice(product.priceCents);
   return (
@@ -42,7 +43,13 @@ function ProductCard({ recommendation }: { recommendation: ProductRecommendation
         <div className="product-reason"><strong>Why it fits your trip</strong><ul>{recommendation.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul></div>
         <div className="product-card-footer">
           <div>{price ? <strong className="product-price">{price}</strong> : <span className="price-unavailable">See current price</span>}<small>{price ? "Price captured for demo" : "On the product page"}</small></div>
-          <div className="purchase-links">{product.purchaseLinks.map((purchaseLink) => <a href={purchaseLink.url} target="_blank" rel="noreferrer" key={purchaseLink.id}>View at {purchaseLink.retailer}<span aria-hidden="true">↗</span></a>)}</div>
+          <div className="purchase-links">{product.purchaseLinks.map((purchaseLink) => {
+            const isPartner = product.partner || purchaseLink.partner;
+            return <a href={purchaseLink.url} target="_blank" rel="noreferrer" onClick={() => {
+              void trackAnalyticsEvent({ eventType: isPartner ? "partner_product_clicked" : "product_clicked", tripId, productId: product.id }).catch(() => undefined);
+              void trackAnalyticsEvent({ eventType: isPartner ? "partner_purchase_link_clicked" : "purchase_link_clicked", tripId, productId: product.id, retailer: purchaseLink.retailer }).catch(() => undefined);
+            }} key={purchaseLink.id}>View at {purchaseLink.retailer}<span aria-hidden="true">↗</span></a>;
+          })}</div>
         </div>
       </div>
     </article>
@@ -53,6 +60,7 @@ export function ProductsPage() {
   const { tripId = "" } = useParams();
   const [state, setState] = useState<PageState>({ status: "loading" });
   const [activeCategory, setActiveCategory] = useState<ProductCategory | "all">("all");
+  const trackedImpressions = useRef(new Set<string>());
 
   useEffect(() => {
     const controller = new AbortController();
@@ -64,6 +72,20 @@ export function ProductsPage() {
       });
     return () => controller.abort();
   }, [tripId]);
+
+  useEffect(() => {
+    if (state.status !== "ready") return;
+    for (const recommendation of state.recommendations) {
+      if (trackedImpressions.current.has(recommendation.id)) continue;
+      trackedImpressions.current.add(recommendation.id);
+      void trackAnalyticsEvent({
+        eventType: "product_recommendation_viewed",
+        tripId,
+        productId: recommendation.product.id,
+        metadata: { rank: recommendation.rank, category: recommendation.product.category },
+      }).catch(() => undefined);
+    }
+  }, [state, tripId]);
 
   const availableCategories = useMemo(() => state.status === "ready"
     ? [...new Set(state.recommendations.map(({ product }) => product.category))]
@@ -84,9 +106,9 @@ export function ProductsPage() {
       <div className="products-topbar"><Link className="back-link" to={`/trips/${tripId}/packing-list`}>← Back to packing list</Link><span>{state.recommendations.length} saved matches · Curated catalog</span></div>
       <section className="products-hero"><div><div className="eyebrow">Products for your travel plan</div><h1>Consider these for {state.trip.destination}.</h1><p>Ranked by category, forecast concern, destination climate, and your skin snapshot—not by sponsorship.</p></div><aside><span>How ranking works</span><strong>Relevance first.</strong><p>A product must match something in your packing plan before it can appear here.</p></aside></section>
       <nav className="product-filters" aria-label="Filter product recommendations"><button className={activeCategory === "all" ? "active" : ""} type="button" onClick={() => setActiveCategory("all")}>All <span>{state.recommendations.length}</span></button>{availableCategories.map((category) => <button className={activeCategory === category ? "active" : ""} type="button" onClick={() => setActiveCategory(category)} key={category}>{categoryLabels[category]} <span>{state.recommendations.filter(({ product }) => product.category === category).length}</span></button>)}</nav>
-      {visibleRecommendations.length > 0 ? <section className="product-grid">{visibleRecommendations.map((recommendation) => <ProductCard recommendation={recommendation} key={recommendation.id} />)}</section> : <section className="product-empty"><strong>No matches in this category.</strong><p>Try another filter to see your saved recommendations.</p></section>}
+      {visibleRecommendations.length > 0 ? <section className="product-grid">{visibleRecommendations.map((recommendation) => <ProductCard recommendation={recommendation} tripId={tripId} key={recommendation.id} />)}</section> : <section className="product-empty"><strong>No matches in this category.</strong><p>Try another filter to see your saved recommendations.</p></section>}
       <aside className="product-disclosure"><span aria-hidden="true">i</span><p>Product information comes from TravelGlow’s manually curated demo catalog. Prices and availability can change; confirm details with the linked brand. No brand partnership is implied.</p></aside>
-      <section className="next-phase product-next-step"><div><span>Coming next</span><strong>Recommendation analytics</strong><p>Measure which recommendations and retailer links help travelers most.</p></div><button className="submit-action" type="button" disabled>View analytics →</button></section>
+      <section className="next-phase product-next-step"><div><span>Demo dashboard</span><strong>Recommendation analytics</strong><p>Measure which recommendations and retailer links help travelers most.</p></div><Link className="submit-action" to="/admin/analytics">View analytics →</Link></section>
     </main>
   );
 }

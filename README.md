@@ -20,6 +20,7 @@ The initial stack includes:
 - Deterministic, versioned Travel Skin Engine with persisted forecasts
 - Deterministic, persisted skincare packing lists with item-level reasons
 - PostgreSQL-backed curated product catalog and relevance-first recommendations
+- First-party recommendation analytics and a demo/admin dashboard
 
 ## Trip API
 
@@ -95,6 +96,17 @@ GET /api/products/:id       Return a curated catalog product and its purchase li
 ```
 
 Only products matching a packing-list need are eligible. The ranking engine supports a tightly capped partner boost for the later demo phase, but that boost cannot make an irrelevant product eligible or override a meaningful relevance match. Catalog prices are optional snapshots and should be confirmed on the linked official product page.
+
+## Analytics dashboard
+
+TravelGlow records recommendation impressions, product clicks, and purchase-link clicks directly in PostgreSQL. Event requests are strictly validated: the backend confirms that a product was recommended for the stated trip, verifies retailer links against the catalog, and derives partner status server-side.
+
+```text
+POST /api/analytics/events  Validate and record a first-party interaction event
+GET  /api/admin/analytics   Return aggregate demo metrics and rankings
+```
+
+Open `/admin/analytics` to view totals for trips, scans, forecasts, impressions, clicks, CTR, partner activity, top products, top retailers, and recommended categories. The dashboard is intentionally demo-scale and does not use Firebase or another third-party analytics service.
 
 ## Run with Docker
 

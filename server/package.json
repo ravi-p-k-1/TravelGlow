@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "migrate": "tsx src/database/migrate.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "tsx --test src/domain/environmentComparison.test.ts src/domain/skin-engine/travelSkinEngine.test.ts src/domain/packing-list/packingListGenerator.test.ts src/domain/product-ranking/productRanker.test.ts src/services/geminiService.test.ts src/utils/imageDimensions.test.ts"
+    "test": "tsx --test src/domain/environmentComparison.test.ts src/domain/skin-engine/travelSkinEngine.test.ts src/domain/packing-list/packingListGenerator.test.ts src/domain/product-ranking/productRanker.test.ts src/domain/analytics/analyticsEventSchema.test.ts src/services/geminiService.test.ts src/utils/imageDimensions.test.ts"
   },
   "dependencies": {
     "cors": "2.8.6",

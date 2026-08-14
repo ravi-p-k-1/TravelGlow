@@ -9,7 +9,7 @@ export function Layout({ children }: PropsWithChildren) {
           <span className="brand-mark" aria-hidden="true">TG</span>
           TravelGlow
         </Link>
-        <span className="phase-label">Travel skin planning</span>
+        <div className="nav-actions"><span className="phase-label">Travel skin planning</span><Link to="/admin/analytics">Demo analytics</Link></div>
       </header>
       {children}
     </div>

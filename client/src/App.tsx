@@ -7,6 +7,7 @@ import { SkinScanPage } from "./pages/SkinScanPage";
 import { ForecastPage } from "./pages/ForecastPage";
 import { PackingListPage } from "./pages/PackingListPage";
 import { ProductsPage } from "./pages/ProductsPage";
+import { AnalyticsPage } from "./pages/AnalyticsPage";
 
 export function App() {
   return (
@@ -20,6 +21,7 @@ export function App() {
           <Route path="/trips/:tripId/forecast" element={<ForecastPage />} />
           <Route path="/trips/:tripId/packing-list" element={<PackingListPage />} />
           <Route path="/trips/:tripId/products" element={<ProductsPage />} />
+          <Route path="/admin/analytics" element={<AnalyticsPage />} />
           <Route path="*" element={<HomePage />} />
         </Routes>
       </Layout>
