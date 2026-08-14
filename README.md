@@ -66,6 +66,12 @@ Forecasts record the engine version and the exact skin-analysis and environmenta
 
 The forecast page is the primary TravelGlow results experience. It automatically generates a missing deterministic forecast, compares home and destination snapshots, summarizes priority levels, and presents cautious possible effects alongside preparation recommendations.
 
+## Gemini explanation layer
+
+After the deterministic forecast exists, the backend sends only normalized skin scores, environmental differences, rule findings, and approved recommendations to Gemini. Gemini returns structured JSON containing a headline, summary, concern explanations, and selected travel tips.
+
+The response is validated before persistence: concern IDs must exactly match the deterministic forecast, and tips must be copied from engine recommendations. If Gemini is unavailable or returns unsupported content, TravelGlow logs the failure and still returns the complete deterministic forecast.
+
 ## Run with Docker
 
 Optionally copy `.env.example` to `.env` and adjust its development values. Then run:

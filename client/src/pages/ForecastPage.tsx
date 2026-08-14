@@ -3,8 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { getTripEnvironment } from "../api/environment";
 import {
   generateSkinForecast,
-  getSkinForecast,
-  SkinForecastApiError,
 } from "../api/skinForecast";
 import { getTrip } from "../api/trips";
 import type { EnvironmentData, TripEnvironment } from "../types/environment";
@@ -92,7 +90,7 @@ function EnvironmentCard({ label, data }: { label: string; data: EnvironmentData
   );
 }
 
-function ConcernCard({ concern, index }: { concern: SkinConcernForecast; index: number }) {
+function ConcernCard({ concern, index, explanation }: { concern: SkinConcernForecast; index: number; explanation?: string }) {
   return (
     <article className={`concern-card concern-card--${concern.level}`}>
       <header>
@@ -102,7 +100,7 @@ function ConcernCard({ concern, index }: { concern: SkinConcernForecast; index: 
       </header>
       <div className="concern-body">
         <section><strong>Why this was flagged</strong><ul>{concern.factors.map((factor) => <li key={factor}>{factor}</li>)}</ul></section>
-        <section className="possible-effect"><strong>What you may notice</strong><p>{possibleEffects[concern.id] ?? "The destination environment may make this concern more noticeable during your trip."}</p></section>
+        <section className="possible-effect"><strong>What you may notice</strong><p>{explanation ?? possibleEffects[concern.id] ?? "The destination environment may make this concern more noticeable during your trip."}</p></section>
         <section className="prepare-list"><strong>Prepare with</strong><ul>{concern.recommendations.map((recommendation) => <li key={recommendation}><span aria-hidden="true">✓</span>{recommendation}</li>)}</ul></section>
       </div>
     </article>
@@ -132,14 +130,8 @@ export function ForecastPage() {
           getTrip(tripId, controller.signal),
           getTripEnvironment(tripId, controller.signal),
         ]);
-        let forecast: SkinForecast;
-        try {
-          forecast = await getSkinForecast(tripId, controller.signal);
-        } catch (error) {
-          if (!(error instanceof SkinForecastApiError) || error.status !== 404) throw error;
-          setState({ status: "loading", message: "Building your personalized outlook…" });
-          forecast = await generateSkinForecast(tripId);
-        }
+        setState({ status: "loading", message: "Building your personalized outlook…" });
+        const forecast = await generateSkinForecast(tripId);
         setState({ status: "ready", trip, environment, forecast });
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") return;
@@ -167,6 +159,9 @@ export function ForecastPage() {
   const concerns = [...forecast.concerns].sort((a, b) => priorityOrder[b.level] - priorityOrder[a.level]);
   const highCount = concerns.filter((concern) => concern.level === "high").length;
   const moderateCount = concerns.filter((concern) => concern.level === "moderate").length;
+  const explanationByConcern = new Map(
+    forecast.explanation?.concerns.map((item) => [item.concernId, item.explanation]) ?? [],
+  );
 
   return (
     <main className="forecast-page">
@@ -205,17 +200,31 @@ export function ForecastPage() {
         </div>
       </section>
 
+      {forecast.explanation && (
+        <section className="gemini-narrative" aria-labelledby="gemini-summary-title">
+          <div className="gemini-mark" aria-hidden="true">✦</div>
+          <div className="gemini-copy">
+            <div className="gemini-label"><span>AI-assisted explanation</span><small>Grounded in Travel Skin Engine findings</small></div>
+            <h2 id="gemini-summary-title">{forecast.explanation.headline}</h2>
+            <p>{forecast.explanation.summary}</p>
+          </div>
+          {forecast.explanation.travelTips.length > 0 && (
+            <div className="gemini-tips"><strong>Quick travel tips</strong><ul>{forecast.explanation.travelTips.map((tip) => <li key={tip}>{tip}</li>)}</ul></div>
+          )}
+        </section>
+      )}
+
       <section className="forecast-heading">
         <div><div className="eyebrow">Personalized outlook</div><h2>What may need your attention</h2><p>Each priority comes directly from the Travel Skin Engine’s transparent rules.</p></div>
         <div className="risk-legend" aria-label="Priority legend"><span className="risk-legend-high">High</span><span className="risk-legend-moderate">Moderate</span><span className="risk-legend-low">Low</span></div>
       </section>
 
       <section className="concern-list">
-        {concerns.length > 0 ? concerns.map((concern, index) => <ConcernCard concern={concern} index={index} key={concern.id} />) : <div className="forecast-clear"><span aria-hidden="true">✓</span><strong>No elevated travel concerns identified.</strong><p>Continue your usual gentle skincare and daily sun protection.</p></div>}
+        {concerns.length > 0 ? concerns.map((concern, index) => <ConcernCard concern={concern} index={index} explanation={explanationByConcern.get(concern.id)} key={concern.id} />) : <div className="forecast-clear"><span aria-hidden="true">✓</span><strong>No elevated travel concerns identified.</strong><p>Continue your usual gentle skincare and daily sun protection.</p></div>}
       </section>
 
       <aside className="forecast-safety"><span aria-hidden="true">i</span><p><strong>Travel planning, not a diagnosis.</strong> This forecast uses cautious, possibility-based guidance. Consider speaking with a dermatologist about severe or persistent concerns.</p></aside>
-      <section className="next-phase forecast-next-step"><div><span>Coming next</span><strong>A friendly summary of your forecast</strong><p>Gemini will explain only these deterministic findings in accessible language.</p></div><button className="submit-action" type="button" disabled>Generate explanation →</button></section>
+      <section className="next-phase forecast-next-step"><div><span>Coming next</span><strong>Your personalized packing list</strong><p>Turn these preparation recommendations into a simple travel checklist.</p></div><button className="submit-action" type="button" disabled>Build packing list →</button></section>
     </main>
   );
 }

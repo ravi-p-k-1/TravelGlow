@@ -8,6 +8,16 @@ export interface SkinConcernForecast {
   recommendations: string[];
 }
 
+export interface ForecastExplanation {
+  headline: string;
+  summary: string;
+  concerns: Array<{
+    concernId: string;
+    explanation: string;
+  }>;
+  travelTips: string[];
+}
+
 export interface SkinForecast {
   id: string;
   tripId: string;
@@ -15,6 +25,9 @@ export interface SkinForecast {
   environmentComparisonId: string;
   concerns: SkinConcernForecast[];
   engineVersion: string;
+  explanation?: ForecastExplanation;
+  explanationModel?: string;
+  explainedAt?: string;
   createdAt: string;
   updatedAt: string;
 }

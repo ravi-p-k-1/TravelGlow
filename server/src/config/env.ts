@@ -27,4 +27,6 @@ export const env = {
   useMockWeather: readBoolean(process.env.USE_MOCK_WEATHER, true),
   youcamApiKey: process.env.YOUCAM_API_KEY ?? "",
   useMockYoucam: readBoolean(process.env.USE_MOCK_YOUCAM, true),
+  geminiApiKey: process.env.GEMINI_API_KEY ?? "",
+  geminiModel: process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
 } as const;

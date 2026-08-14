@@ -25,6 +25,7 @@ services:
       YOUCAM_API_KEY: ${YOUCAM_API_KEY:-}
       YOUCAM_API_SECRET: ${YOUCAM_API_SECRET:-}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
       WEATHER_API_KEY: ${WEATHER_API_KEY:-}
       USE_MOCK_YOUCAM: ${USE_MOCK_YOUCAM:-true}
       USE_MOCK_WEATHER: ${USE_MOCK_WEATHER:-true}
@@ -56,4 +57,3 @@ services:
 
 volumes:
   postgres_data:
-
