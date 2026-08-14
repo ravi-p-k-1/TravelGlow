@@ -64,6 +64,8 @@ GET  /api/trips/:id/forecast  Return the saved forecast
 
 Forecasts record the engine version and the exact skin-analysis and environmental-comparison records used. A new skin scan or changed trip/environment input invalidates the old forecast.
 
+The forecast page is the primary TravelGlow results experience. It automatically generates a missing deterministic forecast, compares home and destination snapshots, summarizes priority levels, and presents cautious possible effects alongside preparation recommendations.
+
 ## Run with Docker
 
 Optionally copy `.env.example` to `.env` and adjust its development values. Then run:
