@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export function Layout({ children }: PropsWithChildren) {
   return (
     <div className="site-shell">
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <header className="nav">
         <Link className="brand" to="/" aria-label="TravelGlow home">
           <span className="brand-mark" aria-hidden="true">TG</span>
@@ -11,7 +12,7 @@ export function Layout({ children }: PropsWithChildren) {
         </Link>
         <div className="nav-actions"><span className="phase-label">Travel skin planning</span><Link to="/admin/analytics">Demo analytics</Link></div>
       </header>
-      {children}
+      <div id="main-content" className="page-content" tabIndex={-1}>{children}</div>
     </div>
   );
 }

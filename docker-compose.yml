@@ -52,6 +52,9 @@ services:
     depends_on:
       server:
         condition: service_healthy
+    environment:
+      PORT: 80
+      API_UPSTREAM: server:5000
     ports:
       - "8080:80"
 

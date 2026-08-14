@@ -29,7 +29,7 @@ export function HomePage() {
         <div className="process-step">
           <span>03</span>
           <strong>Prepare with confidence</strong>
-          <p>Receive your travel skin forecast and packing plan.</p>
+          <p>Receive your travel skin forecast, packing plan, and curated product matches.</p>
         </div>
       </section>
     </main>

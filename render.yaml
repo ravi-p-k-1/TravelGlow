@@ -1,0 +1,55 @@
+services:
+  - type: web
+    name: travelglow-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: travelglow-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: YOUCAM_API_KEY
+        sync: false
+      - key: YOUCAM_API_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: WEATHER_API_KEY
+        sync: false
+      - key: USE_MOCK_YOUCAM
+        value: true
+      - key: USE_MOCK_WEATHER
+        value: true
+
+  - type: web
+    name: travelglow-web
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./client/Dockerfile
+    dockerContext: ./client
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      - key: API_UPSTREAM
+        fromService:
+          type: web
+          name: travelglow-api
+          property: hostport
+
+databases:
+  - name: travelglow-db
+    plan: free
+    region: oregon
+    postgresMajorVersion: "17"
+    databaseName: travelglow
+    user: travelglow

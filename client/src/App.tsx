@@ -8,10 +8,13 @@ import { ForecastPage } from "./pages/ForecastPage";
 import { PackingListPage } from "./pages/PackingListPage";
 import { ProductsPage } from "./pages/ProductsPage";
 import { AnalyticsPage } from "./pages/AnalyticsPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
+import { RouteEffects } from "./components/RouteEffects";
 
 export function App() {
   return (
     <BrowserRouter>
+      <RouteEffects />
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -22,7 +25,7 @@ export function App() {
           <Route path="/trips/:tripId/packing-list" element={<PackingListPage />} />
           <Route path="/trips/:tripId/products" element={<ProductsPage />} />
           <Route path="/admin/analytics" element={<AnalyticsPage />} />
-          <Route path="*" element={<HomePage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>

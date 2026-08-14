@@ -73,7 +73,7 @@ export function AnalyticsPage() {
         <MetricCard label="Partner clicks" value={analytics.totals.partnerClicks} note={`${analytics.totals.partnerImpressions} partner impressions`} />
       </section>
 
-      <section className="analytics-funnel" aria-labelledby="funnel-title"><header><div><div className="eyebrow">Recommendation funnel</div><h2 id="funnel-title">Commercial journey</h2></div><p>Event totals across all saved trips</p></header><div>{funnel.map((step, index) => <div className="funnel-row" key={step.label}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{step.label}</strong><i style={{ width: `${Math.max((step.value / maxFunnel) * 100, step.value > 0 ? 5 : 0)}%` }} /></div><b>{step.value}</b></div>)}</div></section>
+      <section className="analytics-funnel" aria-labelledby="funnel-title"><header><div><div className="eyebrow">Recommendation funnel</div><h2 id="funnel-title">Commercial journey</h2></div><p>Event totals across all saved trips</p></header><div>{funnel.map((step, index) => <div className="funnel-row" key={step.label}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{step.label}</strong><i aria-hidden="true" style={{ width: `${Math.max((step.value / maxFunnel) * 100, step.value > 0 ? 5 : 0)}%` }} /></div><b>{step.value}</b></div>)}</div></section>
 
       <section className="partner-analytics" aria-labelledby="partner-analytics-title"><div><span>Simulated partner performance</span><h2 id="partner-analytics-title">A measurable placement story.</h2><p>These figures include only catalog records marked as demo placements. They do not represent a real commercial relationship.</p></div><dl><div><dt>Impressions</dt><dd>{analytics.totals.partnerImpressions}</dd></div><div><dt>Product clicks</dt><dd>{analytics.totals.partnerProductClicks}</dd></div><div><dt>Retailer clicks</dt><dd>{analytics.totals.partnerPurchaseLinkClicks}</dd></div><div><dt>Partner CTR</dt><dd>{analytics.totals.partnerCtr}%</dd></div></dl></section>
 
@@ -84,7 +84,7 @@ export function AnalyticsPage() {
       </section>
 
       <aside className="analytics-disclosure"><span aria-hidden="true">i</span><p><strong>Demo-scale analytics.</strong> This dashboard stores only application interaction events—no account, payment, location tracking, or third-party analytics platform is involved. Featured Partner metrics are simulated for the hackathon.</p></aside>
-      <section className="next-phase analytics-next-step"><div><span>Coming next</span><strong>Production polish and deployment</strong><p>Finalize accessibility, responsive behavior, documentation, and deployment configuration.</p></div><button className="submit-action" type="button" disabled>Deployment polish →</button></section>
+      <section className="next-phase analytics-next-step"><div><span>End-to-end demo ready</span><strong>Start a new TravelGlow journey</strong><p>Create a trip, scan a selfie, and follow the personalized forecast through packing and product recommendations.</p></div><Link className="submit-action" to="/trips/new">Plan a trip →</Link></section>
     </main>
   );
 }

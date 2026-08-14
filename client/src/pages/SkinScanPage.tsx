@@ -52,7 +52,7 @@ function AnalysisResults({ analysis }: { analysis: SkinAnalysis }) {
       <div className="skin-metrics-grid">
         {availableMetrics.map(([key, label]) => {
           const value = analysis[key] as number;
-          return <div className="skin-metric" key={key}><div><span>{label}</span><strong>{Math.round(value)}</strong></div><div className="score-track" aria-label={`${label} score ${Math.round(value)} out of 100`}><span style={{ width: `${value}%` }} /></div></div>;
+          return <div className="skin-metric" key={key}><div><span>{label}</span><strong>{Math.round(value)}</strong></div><div className="score-track" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value)}><span style={{ width: `${value}%` }} /></div></div>;
         })}
       </div>
       <p className="analysis-disclaimer">TravelGlow uses these cosmetic skin-analysis scores for travel planning. This is not a medical diagnosis.</p>
