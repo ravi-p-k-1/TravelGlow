@@ -83,7 +83,7 @@ export function PackingListPage() {
         })}
       </div>
       <aside className="forecast-safety packing-note"><span aria-hidden="true">i</span><p><strong>Keep it familiar.</strong> Travel is usually not the best time to introduce several new products. This checklist is planning guidance, not medical advice.</p></aside>
-      <section className="next-phase packing-next-step"><div><span>Coming next</span><strong>Product recommendations</strong><p>Match this checklist with curated products for your travel needs.</p></div><button className="submit-action" type="button" disabled>Explore products →</button></section>
+      <section className="next-phase packing-next-step"><div><span>Next step</span><strong>Product recommendations</strong><p>Match this checklist with curated products for your travel needs.</p></div><Link className="submit-action" to={`/trips/${tripId}/products`}>Explore products →</Link></section>
     </main>
   );
 }

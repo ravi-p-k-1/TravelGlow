@@ -19,6 +19,7 @@ The initial stack includes:
 - YouCam-compatible selfie upload and persisted normalized skin analysis
 - Deterministic, versioned Travel Skin Engine with persisted forecasts
 - Deterministic, persisted skincare packing lists with item-level reasons
+- PostgreSQL-backed curated product catalog and relevance-first recommendations
 
 ## Trip API
 
@@ -83,6 +84,17 @@ GET  /api/trips/:id/packing-list  Return the saved list
 ```
 
 Packing lists record their generator version and source forecast. Replacing a skin analysis or invalidating the forecast also removes the old packing list through its database relationship.
+
+## Product recommendations
+
+TravelGlow maintains an internal catalog of 20 curated products and manual official-brand purchase links. It does not call an external cosmetics catalog at runtime. Recommendations are ranked by packing-list category, deterministic forecast concern, destination climate, and skin-profile fit, then persisted against the source forecast.
+
+```text
+GET /api/trips/:id/products  Generate if needed, then return saved recommendations
+GET /api/products/:id       Return a curated catalog product and its purchase links
+```
+
+Only products matching a packing-list need are eligible. The ranking engine supports a tightly capped partner boost for the later demo phase, but that boost cannot make an irrelevant product eligible or override a meaningful relevance match. Catalog prices are optional snapshots and should be confirmed on the linked official product page.
 
 ## Run with Docker
 

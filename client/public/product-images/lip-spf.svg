@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" role="img" aria-label="Lip SPF tube illustration">
+  <rect width="480" height="360" rx="32" fill="#f6e7e4"/><circle cx="95" cy="82" r="44" fill="#eaa696" opacity=".45"/>
+  <g transform="rotate(12 240 180)"><rect x="188" y="78" width="104" height="212" rx="28" fill="#fffdfa" stroke="#d9bdb7" stroke-width="4"/><rect x="188" y="230" width="104" height="60" rx="16" fill="#ce705d"/><rect x="205" y="126" width="70" height="76" rx="35" fill="#edb0a2"/><text x="240" y="170" text-anchor="middle" font-family="Arial" font-size="17" font-weight="700" fill="#8a4a3e">LIP</text><text x="240" y="258" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#fff">SPF</text></g>
+</svg>
