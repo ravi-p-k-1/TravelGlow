@@ -224,7 +224,7 @@ export function ForecastPage() {
       </section>
 
       <aside className="forecast-safety"><span aria-hidden="true">i</span><p><strong>Travel planning, not a diagnosis.</strong> This forecast uses cautious, possibility-based guidance. Consider speaking with a dermatologist about severe or persistent concerns.</p></aside>
-      <section className="next-phase forecast-next-step"><div><span>Coming next</span><strong>Your personalized packing list</strong><p>Turn these preparation recommendations into a simple travel checklist.</p></div><button className="submit-action" type="button" disabled>Build packing list →</button></section>
+      <section className="next-phase forecast-next-step"><div><span>Next step</span><strong>Your personalized packing list</strong><p>Turn these preparation recommendations into a simple travel checklist.</p></div><Link className="submit-action" to={`/trips/${tripId}/packing-list`}>Build packing list →</Link></section>
     </main>
   );
 }

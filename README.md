@@ -18,6 +18,7 @@ The initial stack includes:
 - Deterministic environment comparison with mock and WeatherAPI.com adapters
 - YouCam-compatible selfie upload and persisted normalized skin analysis
 - Deterministic, versioned Travel Skin Engine with persisted forecasts
+- Deterministic, persisted skincare packing lists with item-level reasons
 
 ## Trip API
 
@@ -71,6 +72,17 @@ The forecast page is the primary TravelGlow results experience. It automatically
 After the deterministic forecast exists, the backend sends only normalized skin scores, environmental differences, rule findings, and approved recommendations to Gemini. Gemini returns structured JSON containing a headline, summary, concern explanations, and selected travel tips.
 
 The response is validated before persistence: concern IDs must exactly match the deterministic forecast, and tips must be copied from engine recommendations. If Gemini is unavailable or returns unsupported content, TravelGlow logs the failure and still returns the complete deterministic forecast.
+
+## Personalized packing list
+
+The packing-list generator converts the deterministic forecast, destination conditions, and saved skin snapshot into Essential, Recommended for Your Skin, and Optional sections. Every item includes a reason, and duplicate product needs are removed before the list is saved with the trip.
+
+```text
+POST /api/trips/:id/packing-list  Generate once, or return the saved list
+GET  /api/trips/:id/packing-list  Return the saved list
+```
+
+Packing lists record their generator version and source forecast. Replacing a skin analysis or invalidating the forecast also removes the old packing list through its database relationship.
 
 ## Run with Docker
 
