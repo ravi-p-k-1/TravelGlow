@@ -6,6 +6,7 @@ import { healthRouter } from "./routes/healthRoutes.js";
 import { tripRouter } from "./routes/tripRoutes.js";
 import { environmentRouter } from "./routes/environmentRoutes.js";
 import { skinAnalysisRouter } from "./routes/skinAnalysisRoutes.js";
+import { skinForecastRouter } from "./routes/skinForecastRoutes.js";
 
 export const app = express();
 
@@ -18,6 +19,7 @@ app.use("/api/health", healthRouter);
 app.use("/api/trips", tripRouter);
 app.use("/api/trips/:id/environment", environmentRouter);
 app.use("/api/trips/:id/skin-analysis", skinAnalysisRouter);
+app.use("/api/trips/:id/forecast", skinForecastRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

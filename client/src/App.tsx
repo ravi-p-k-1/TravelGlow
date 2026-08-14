@@ -4,6 +4,7 @@ import { CreateTripPage } from "./pages/CreateTripPage";
 import { HomePage } from "./pages/HomePage";
 import { TripPage } from "./pages/TripPage";
 import { SkinScanPage } from "./pages/SkinScanPage";
+import { ForecastPage } from "./pages/ForecastPage";
 
 export function App() {
   return (
@@ -14,6 +15,7 @@ export function App() {
           <Route path="/trips/new" element={<CreateTripPage />} />
           <Route path="/trips/:tripId" element={<TripPage />} />
           <Route path="/trips/:tripId/skin-scan" element={<SkinScanPage />} />
+          <Route path="/trips/:tripId/forecast" element={<ForecastPage />} />
           <Route path="*" element={<HomePage />} />
         </Routes>
       </Layout>

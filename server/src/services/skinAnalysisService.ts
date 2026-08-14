@@ -4,6 +4,7 @@ import { ApiError } from "../utils/apiError.js";
 import { getTrip } from "./tripService.js";
 import { analyzeSelfie } from "./youcamService.js";
 import { getImageDimensions } from "../utils/imageDimensions.js";
+import { deleteSkinForecast } from "../repositories/skinForecastRepository.js";
 
 export async function getPersistedSkinAnalysis(tripId: string): Promise<SkinAnalysis> {
   await getTrip(tripId);
@@ -21,5 +22,7 @@ export async function createSkinAnalysis(
   if (Math.min(dimensions.width, dimensions.height) < 480) {
     throw new ApiError(400, "Selfie resolution is too small. The shortest side must be at least 480 pixels.");
   }
-  return saveSkinAnalysis(tripId, await analyzeSelfie(image));
+  const analysis = await analyzeSelfie(image);
+  await deleteSkinForecast(tripId);
+  return saveSkinAnalysis(tripId, analysis);
 }

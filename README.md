@@ -17,6 +17,7 @@ The initial stack includes:
 - Persisted home and destination environment snapshots
 - Deterministic environment comparison with mock and WeatherAPI.com adapters
 - YouCam-compatible selfie upload and persisted normalized skin analysis
+- Deterministic, versioned Travel Skin Engine with persisted forecasts
 
 ## Trip API
 
@@ -51,6 +52,17 @@ GET  /api/trips/:id/skin-analysis  Return the saved analysis
 ```
 
 Mock analysis is enabled by default. To use the documented YouCam Skin Analysis v2.1 workflow, set `USE_MOCK_YOUCAM=false` and provide `YOUCAM_API_KEY`. The backend requests a presigned upload URL, uploads the image, creates an asynchronous analysis task, polls for completion, and normalizes the returned scores.
+
+## Travel Skin Engine
+
+The Travel Skin Engine runs deterministic, independently tested rules for UV exposure, humidity and oiliness, dry-climate hydration, heat and congestion, and cold/dry barrier support. Gemini does not select risks or recommendations.
+
+```text
+POST /api/trips/:id/forecast  Generate once, or return the saved forecast
+GET  /api/trips/:id/forecast  Return the saved forecast
+```
+
+Forecasts record the engine version and the exact skin-analysis and environmental-comparison records used. A new skin scan or changed trip/environment input invalidates the old forecast.
 
 ## Run with Docker
 

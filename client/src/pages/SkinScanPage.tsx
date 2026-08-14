@@ -117,7 +117,7 @@ export function SkinScanPage() {
       {state.analysis && !file ? (
         <>
           <AnalysisResults analysis={state.analysis} />
-          <div className="analysis-actions"><label className="secondary-action">Analyze a new selfie<input type="file" accept="image/jpeg,image/png" capture="user" onChange={selectFile} /></label><button className="submit-action" type="button" disabled>Build my skin forecast →</button></div>
+          <div className="analysis-actions"><label className="secondary-action">Analyze a new selfie<input type="file" accept="image/jpeg,image/png" capture="user" onChange={selectFile} /></label><Link className="submit-action" to={`/trips/${tripId}/forecast`}>Build my skin forecast →</Link></div>
         </>
       ) : (
         <section className="scan-layout">
