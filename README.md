@@ -254,3 +254,7 @@ The frontend nginx configuration is rendered from environment variables at conta
 - Regional catalog availability, live inventory, and richer retailer integrations.
 - Clinician-reviewed rule expansion and broader skin-tone validation.
 - Persisted packing progress, offline access, and installable PWA support.
+
+## License
+
+TravelGlow's original source code and project-owned assets are available under the [MIT License](LICENSE). Third-party packages, APIs, product names, and trademarks remain subject to their respective owners' terms; see [Third-Party Notices](THIRD_PARTY_NOTICES.md).
